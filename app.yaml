@@ -1,0 +1,12 @@
+runtime: nodejs12
+entrypoint: node app.js
+service: admin-bot
+instance_class: F4_1G
+automatic_scaling:
+  max_instances: 5
+  min_instances: 0
+  max_concurrent_requests: 30
+  target_throughput_utilization: 0.8
+  target_cpu_utilization: 0.8
+includes:
+  - env.yaml
