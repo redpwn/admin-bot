@@ -1,6 +1,5 @@
 runtime: nodejs12
 entrypoint: node app.js
-service: admin-bot
 instance_class: F4_1G
 automatic_scaling:
   max_instances: 5
