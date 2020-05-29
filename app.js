@@ -1,15 +1,13 @@
-require('dotenv/config')
 const fs = require('fs')
 const http = require('http')
 const getRawBody = require('raw-body')
 const mustache = require('mustache')
 const got = require('got')
-const getChallenges = require('./challenges')
+const puppeteer = require('puppeteer')
+const { challenges, recaptchaSite, recaptchaSecret } = require('./config')
 
 ;(async () => {
-  const recaptchaSite = process.env.APP_RECAPTCHA_SITE
-  const recaptchaSecret = process.env.APP_RECAPTCHA_SECRET
-  const port = parseInt(process.env.PORT)
+  const port = parseInt(process.env.PORT) || 3000
 
   const timeout = time => new Promise((_, reject) => setTimeout(reject, time))
   const uri = (parts, ...rest) => parts
@@ -17,7 +15,7 @@ const getChallenges = require('./challenges')
     .join('')
 
   const submitPage = (await fs.promises.readFile('submit.html')).toString()
-  const challenges = await getChallenges()
+  const browser = await puppeteer.launch({ env: {} })
 
   http.createServer(async (req, res) => {
     const [pathname, query] = req.url.split('?', 2)
@@ -56,6 +54,13 @@ const getChallenges = require('./challenges')
       const url = body.get('url')
       const challId = body.get('challenge')
 
+      const sendMsg = (msg) => {
+        res.writeHead(302, {
+          location: uri`/submit?challenge=${challId}&url=${url}&message=${msg}`
+        })
+        res.end()
+      }
+
       const recaptchaRes = await got({
         url: 'https://www.google.com/recaptcha/api/siteverify',
         method: 'POST',
@@ -66,9 +71,7 @@ const getChallenges = require('./challenges')
         }
       })
       if (!recaptchaRes.body.success) {
-        res.writeHead(302, {
-          location: uri `/submit?challenge=${challId}&url=${url}&message=${'The recaptcha is invalid.'}`
-        }).end()
+        sendMsg('The recaptcha is invalid.')
         return
       }
 
@@ -78,20 +81,22 @@ const getChallenges = require('./challenges')
         return
       }
 
+      let ctx
       try {
-        await Promise.race([chall.handler(url), timeout(15000)])
+        ctx = await browser.createIncognitoBrowserContext()
+        await Promise.race([chall.handler(url, ctx), timeout(10000)])
       } catch (e) {
-        res.writeHead(302, {
-          location: uri`/submit?challenge=${challId}&url=${url}&message=${'An error occurred while visiting the URL.'}`
-        }).end()
+        sendMsg('An error occurred while visiting your URL.')
         return
+      } finally {
+        if (ctx !== undefined) {
+          await ctx.close()
+        }
       }
 
-      res.writeHead(302, {
-        location: uri`/submit?challenge=${challId}&url=${url}&message=${'The admin has visited the URL!'}`
-      }).end()
+      sendMsg('The admin has visited your URL.')
     } else {
       res.writeHead(404).end()
     }
-  }).listen(port, () => console.log('listening'))
+  }).listen(port, () => console.log('listening on port', port))
 })()

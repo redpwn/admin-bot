@@ -1,5 +1,9 @@
 runtime: nodejs12
-entrypoint: node app.js
+entrypoint: node --unhandled-rejections=strict app.js
+handlers:
+  - url: .*
+    secure: always
+    script: auto
 instance_class: F4_1G
 automatic_scaling:
   max_instances: 5
@@ -7,5 +11,3 @@ automatic_scaling:
   max_concurrent_requests: 30
   target_throughput_utilization: 0.8
   target_cpu_utilization: 0.8
-includes:
-  - env.yaml

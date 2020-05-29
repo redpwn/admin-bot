@@ -4,6 +4,7 @@ A scalable service for client-side CTF challenges
 ## Deployment
 This project is deployed with Google App Engine.
 
-* Copy `env.yaml.example` to `env.yaml` and place recaptcha credentials inside.
-* Copy `challenges.js.example` to `challenges.js` and place handlers for each challenge inside.
-* Run `gcloud app deploy` to deploy the app to Google App Engine.
+* Copy `config.js.example` to `config.js`
+* Place recaptcha credentials and handlers for each challenge in `config.js`.
+* Run `gcloud app deploy`.
+* Visit `https://project-id.appspot.com/submit?challenge=challenge-id`
