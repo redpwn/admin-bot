@@ -11,11 +11,24 @@ const { challenges, recaptchaSite, recaptchaSecret } = require('./config')
 
   const timeout = time => new Promise((_, reject) => setTimeout(reject, time))
   const uri = (parts, ...rest) => parts
-    .map((part, i) => part + encodeURIComponent(i < parts.length - 1 ? rest[i] : ''))
+    .map((part, i) => part + (i < parts.length - 1 ? encodeURIComponent(rest[i]) : ''))
     .join('')
 
   const submitPage = (await fs.promises.readFile('submit.html')).toString()
   const browser = await puppeteer.launch({ env: {} })
+
+  browser.on('targetcreated', async (target) => {
+    try {
+      const page = await target.page()
+      if (page === null) {
+        return
+      }
+      const ctx = await target.browserContext()
+      if (!ctx.isIncognito()) {
+        await page.close()
+      }
+    } catch {}
+  })
 
   http.createServer(async (req, res) => {
     const [pathname, query] = req.url.split('?', 2)
@@ -84,14 +97,14 @@ const { challenges, recaptchaSite, recaptchaSecret } = require('./config')
       let ctx
       try {
         ctx = await browser.createIncognitoBrowserContext()
-        await Promise.race([chall.handler(url, ctx), timeout(10000)])
-      } catch (e) {
+        await Promise.race([chall.handler(url, ctx), timeout(15000)])
+      } catch {
         sendMsg('An error occurred while visiting your URL.')
         return
       } finally {
-        if (ctx !== undefined) {
+        try {
           await ctx.close()
-        }
+        } catch {}
       }
 
       sendMsg('The admin has visited your URL.')
