@@ -97,7 +97,7 @@ const { challenges, recaptchaSite, recaptchaSecret } = require('./config')
       let ctx
       try {
         ctx = await browser.createIncognitoBrowserContext()
-        await Promise.race([chall.handler(url, ctx), timeout(15000)])
+        await Promise.race([chall.handler(url, ctx), timeout(chall.timeout)])
       } catch {
         sendMsg('An error occurred while visiting your URL.')
         return
