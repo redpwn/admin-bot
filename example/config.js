@@ -1,6 +1,3 @@
-const recaptchaSite = 'AAAA'
-const recaptchaSecret = 'AAAA'
-
 const sleep = time => new Promise(resolve => setTimeout(resolve, time))
 
 const challenges = new Map([
@@ -18,6 +15,4 @@ const challenges = new Map([
 
 module.exports = {
   challenges,
-  recaptchaSite,
-  recaptchaSecret
 }
