@@ -7,14 +7,18 @@ terraform {
   }
 }
 
-variable "project" {
-  type = string
-}
+variable "project" {}
 variable "region" {
-  type = string
+  default = "us-east1"
 }
 variable "image" {
-  type = string
+  default = "gcr.io/redpwn/admin-bot/example"
+}
+variable "recaptcha" {
+  default = {
+    site = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+    secret = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+  }
 }
 output "submit_url" {
   value = module.admin-bot.submit_url
@@ -28,8 +32,5 @@ provider "google" {
 module "admin-bot" {
   source = "redpwn/admin-bot/google"
   image = var.image
-  recaptcha = {
-    site = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-    secret = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
-  }
+  recaptcha = var.recaptcha
 }
