@@ -12,7 +12,7 @@ variable "region" {
   default = "us-east1"
 }
 variable "image" {
-  default = "gcr.io/redpwn/admin-bot/example"
+  default = "us-east1-docker.pkg.dev/redpwn/admin-bot/example"
 }
 variable "recaptcha" {
   default = {
