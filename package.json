@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "sh src/start.sh"
+    "start": "sh scripts/start.sh"
   },
   "dependencies": {
     "@google-cloud/pubsub": "^2.10.0",

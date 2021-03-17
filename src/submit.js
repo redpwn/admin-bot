@@ -22,14 +22,6 @@ http.createServer(async (req, res) => {
     res.writeHead(404).end()
     return
   }
-  let body
-  const send = (msg) => {
-    res.writeHead(302, {
-      'location': `?url=${encodeURIComponent(body.get('url'))}&msg=${encodeURIComponent(msg)}`
-    })
-    res.end()
-    return
-  }
   if (req.method === 'GET') {
     const page = mustache.render(submitPage, {
       challenge_name: challenge.name,
@@ -42,6 +34,13 @@ http.createServer(async (req, res) => {
   }
   if (req.method !== 'POST') {
     res.writeHead(405).end()
+    return
+  }
+  let body
+  const send = (msg) => {
+    res.writeHead(302, {
+      'location': `?url=${encodeURIComponent(body.get('url'))}&msg=${encodeURIComponent(msg)}`
+    }).end()
     return
   }
   try {
@@ -68,7 +67,7 @@ http.createServer(async (req, res) => {
     return
   }
   const url = body.get('url')
-  if (!url || !/^https?:\/\//.test(url)) {
+  if (!/^https?:\/\//.test(url)) {
     send('The URL is invalid.')
     return
   }

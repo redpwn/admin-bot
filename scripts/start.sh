@@ -9,4 +9,4 @@ concurrently \
 "nodemon -L src/submit.js" \
 "nodemon -L src/visit.js" \
 "gcloud beta emulators pubsub start --project ctf" \
-"node src/subscribe.js"
+"node scripts/subscribe.js"

@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
   rm -rf /var/lib/apt/lists/*
 COPY package.json yarn.lock ./
 ENV NODE_ENV production
-RUN yarn --frozen-lockfile
+RUN yarn --frozen-lockfile && yarn cache clean
 COPY src .
 USER node
 CMD ["/app/run.sh"]

@@ -29,17 +29,16 @@ http.createServer(async (req, res) => {
   const { challengeId, url } = JSON.parse(message)
   const challenge = config.challenges.get(challengeId)
 
+  let ctx
   try {
-    let ctx
     ctx = await (await browser).createIncognitoBrowserContext()
     await Promise.race([challenge.handler(url, ctx), sleep(challenge.timeout)])
   } catch (e) {
     console.error(e)
-  } finally {
-    try {
-      await ctx.close()
-    } catch {}
   }
+  try {
+    await ctx.close()
+  } catch {}
 
   res.writeHead(204).end()
 }).listen(process.env.PORT ?? 8081, () => {
