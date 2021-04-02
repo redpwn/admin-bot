@@ -3,12 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "sh scripts/start.sh"
+    "start": "concurrently yarn:start:*",
+    "start:submit": "PORT=8080 nodemon -L src/submit.js",
+    "start:visit": "PORT=8081 nodemon -L src/visit.js"
   },
   "dependencies": {
+    "@aws-sdk/client-sqs": "^3.10.0",
     "@google-cloud/pubsub": "^2.10.0",
+    "aws-lambda-ric": "^1.0.0",
     "got": "^11.8.2",
-    "mustache": "^4.1.0",
+    "mustache": "^4.2.0",
     "puppeteer": "^8.0.0",
     "raw-body": "^2.4.1"
   },

@@ -33,10 +33,10 @@
     width: 100%;
   }
   input {
-    border: 1px #eee solid;
     background: #18181c;
-    margin-bottom: 30px;
     color: #eee;
+    border: 1px #eee solid;
+    margin-bottom: 30px;
   }
   button {
     background: #eee;
@@ -56,23 +56,27 @@
     URL
     <input type="text" name="url" autofocus required placeholder="https://example.com" pattern="https?://.*" value="{{ url }}">
   </label>
-  <input type="hidden" name="recaptcha_code" id="recaptcha_code">
+  {{ #recaptcha_site }}
+    <input type="hidden" name="recaptcha_code" id="recaptcha_code">
+  {{ /recaptcha_site }}
   <button type="submit">Submit</button>
 </form>
-<script src="https://www.google.com/recaptcha/api.js"></script>
-<script>
-  grecaptcha.ready(function () {
-    grecaptcha.render({
-      theme: 'dark',
-      sitekey: '{{ recaptcha_site }}',
-      callback: function (token) {
-        recaptcha_code.value = token
-        form.submit()
-      },
+{{ #recaptcha_site }}
+  <script src="https://www.google.com/recaptcha/api.js"></script>
+  <script>
+    grecaptcha.ready(function () {
+      grecaptcha.render({
+        theme: 'dark',
+        sitekey: '{{ . }}',
+        callback: function (token) {
+          recaptcha_code.value = token
+          form.submit()
+        }
+      })
     })
-  })
-  form.addEventListener('submit', function (evt) {
-    evt.preventDefault()
-    grecaptcha.execute()
-  })
-</script>
+    form.addEventListener('submit', function (evt) {
+      evt.preventDefault()
+      grecaptcha.execute()
+    })
+  </script>
+{{ /recaptcha_site }}
