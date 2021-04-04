@@ -21,7 +21,6 @@ const listen = (opts, handler) => {
         return
       }
     }
-    let evt
     if (opts.subscribe) {
       const data = JSON.parse(reqBody).message.data
       await handler({
@@ -128,6 +127,8 @@ if (process.env.AWS_EXECUTION_ENV) {
   }
 } else {
   exports.runtime = 'local'
+
+  const http = require('http')
 
   exports.run = listen
 

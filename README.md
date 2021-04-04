@@ -20,25 +20,29 @@ In [`examples/aws`](https://github.com/redpwn/admin-bot/tree/master/examples/aws
 
 ```sh
 aws configure
+repo=$(aws ecr create-repository --repository-name admin-bot --region us-east-1 | jq -r .repository.repositoryUri)
+docker pull redpwn/admin-bot-example
+docker tag redpwn/admin-bot-example "$repo"
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "$repo"
+docker push "$repo"
 terraform init
-terraform apply
+terraform apply --var "image=$(docker image inspect "$repo" -f '{{ index .RepoDigests 0 }}')"
 ```
 
 After applying, Terraform outputs a `submit_url`. To submit a URL to the admin bot, visit `<submit_url>/one`.
 
 ## Deployment
 
-1. Create a [`config.js` file](#challenge-configuration).
-1. Make a [`Dockerfile`](https://github.com/redpwn/admin-bot/blob/master/examples/image/Dockerfile).
+1. Create a [`config.js` file](#challenge-configuration) and a [`Dockerfile`](https://github.com/redpwn/admin-bot/blob/master/examples/image/Dockerfile).
 
 ### GCP
 
-3. Build and push the image to [`gcr.io`](https://cloud.google.com/container-registry) or [`pkg.dev`](https://cloud.google.com/artifact-registry).
+2. Build and push the image to [`gcr.io`](https://cloud.google.com/container-registry) or [`pkg.dev`](https://cloud.google.com/artifact-registry).
 1. Use the [Terraform module](https://registry.terraform.io/modules/redpwn/admin-bot/google/latest) to deploy to Cloud Run.
 
 ### AWS
 
-3. Build and push the image to [ECR](https://aws.amazon.com/ecr/).
+2. Build and push the image to [ECR](https://aws.amazon.com/ecr/).
 1. Use the [Terraform module](https://registry.terraform.io/modules/redpwn/admin-bot/aws/latest) to deploy to Fargate and Lambda.
 
 ## Challenge Configuration

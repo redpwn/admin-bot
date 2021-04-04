@@ -11,7 +11,7 @@ const browser = puppeteer.launch({
 })
 
 server.run({ subscribe: true }, async ({ message }) => {
-  const { challengeId, url, args } = message
+  const { challengeId, url } = message
   const challenge = config.challenges.get(challengeId)
 
   let ctx

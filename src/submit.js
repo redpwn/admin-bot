@@ -1,10 +1,11 @@
+const path = require('path')
 const fs = require('fs')
 const mustache = require('mustache')
 const got = require('got')
 const server = require('./server')
 const config = require('./config')
 
-const submitPage = fs.readFileSync(__dirname + '/submit.html').toString()
+const submitPage = fs.readFileSync(path.join(__dirname, 'submit.html')).toString()
 
 server.run({}, async (req) => {
   const challengeId = req.pathname.slice(1)
@@ -17,7 +18,7 @@ server.run({}, async (req) => {
       challenge_name: challenge.name,
       recaptcha_site: process.env.APP_RECAPTCHA_SITE,
       msg: req.query.msg,
-      url: req.query.url,
+      url: req.query.url
     })
     return {
       statusCode: 200,
