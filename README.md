@@ -20,7 +20,7 @@ In [`examples/aws`](https://github.com/redpwn/admin-bot/tree/master/examples/aws
 
 ```sh
 aws configure
-repo=$(aws ecr create-repository --repository-name admin-bot --region us-east-1 | jq -r .repository.repositoryUri)
+repo=$(aws ecr create-repository --repository-name admin-bot --region us-east-1 --query repository.repositoryUri --output text)
 docker pull redpwn/admin-bot-example
 docker tag redpwn/admin-bot-example "$repo"
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "$repo"
