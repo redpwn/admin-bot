@@ -6,7 +6,7 @@
     "start": "concurrently yarn:start:*",
     "start:submit": "PORT=8080 nodemon -L src/submit.js",
     "start:visit": "PORT=8081 nodemon -L src/visit.js",
-    "postinstall": "[ -d chromium ] || curl -fsS https://redpwn.storage.googleapis.com/admin-bot/chromium-90.tar.bz2 | tar xj"
+    "postinstall": "[ -d chromium ] || curl -fsS https://redpwn.storage.googleapis.com/admin-bot/2021-05-04-chromium-90.tar.bz2 | tar xj"
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.10.0",
