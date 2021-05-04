@@ -9,7 +9,7 @@ const browser = puppeteer.launch({
   dumpio: true,
   executablePath: './chromium/chrome',
   args: [
-    '--jitless',
+    '--js-flags=--jitless',
     ...(server.runtime === 'aws' ? ['--no-sandbox'] : [])
   ]
 })
