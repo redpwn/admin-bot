@@ -57,6 +57,8 @@ The value of each entry is an object with properties:
 * `timeout`: the timeout in milliseconds for each admin bot visit
 * `handler`: a function which returns a `Promise` and accepts the submitted URL and a [Puppeteer `BrowserContext`](https://pptr.dev/#?show=api-class-browsercontext)
 
+To mitigate possible Chrome vulnerabilities, V8 DCHECKs are enabled and JIT/WebAssembly/asm.js are disabled.
+
 ## Terraform Configuration
 
 ### GCP
