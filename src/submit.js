@@ -54,9 +54,11 @@ server.run({}, async (req) => {
   if (!/^https?:\/\//.test(url)) {
     return send('The URL is invalid.')
   }
-  await server.publish({
+  const payload = {
     challengeId,
     url
-  })
+  }
+  console.log('publishing', JSON.stringify(payload))
+  await server.publish(payload)
   return send('The admin will visit your URL.')
 })

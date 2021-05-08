@@ -64,14 +64,20 @@ if (process.env.AWS_EXECUTION_ENV) {
     for (let i = 0; i < 5; i++) {
       ;(async () => {
         while (true) {
-          const { Messages } = await sqs.receiveMessage({
-            QueueUrl: process.env.APP_SQS_URL,
-            WaitTimeSeconds: 20
-          })
-          if (!Messages) {
+          let msgs
+          try {
+            msgs = (await sqs.receiveMessage({
+              QueueUrl: process.env.APP_SQS_URL,
+              WaitTimeSeconds: 20
+            })).Messages
+          } catch (e) {
+            console.error(e)
             continue
           }
-          const msg = Messages[0]
+          if (!msgs) {
+            continue
+          }
+          const msg = msgs[0]
           await handler({ message: JSON.parse(msg.Body) })
           await sqs.deleteMessage({
             QueueUrl: process.env.APP_SQS_URL,
