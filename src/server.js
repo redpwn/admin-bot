@@ -64,21 +64,23 @@ if (process.env.AWS_EXECUTION_ENV) {
     for (let i = 0; i < 5; i++) {
       ;(async () => {
         while (true) {
-          let msgs
+          let msg
+          let body
           try {
-            msgs = (await sqs.receiveMessage({
+            const { Messages } = await sqs.receiveMessage({
               QueueUrl: process.env.APP_SQS_URL,
               WaitTimeSeconds: 20
-            })).Messages
+            })
+            if (!Messages) {
+              continue
+            }
+            msg = Messages[0]
+            body = JSON.parse(Buffer.from(msg.Body, 'base64').toString())
           } catch (e) {
             console.error(e)
             continue
           }
-          if (!msgs) {
-            continue
-          }
-          const msg = msgs[0]
-          await handler({ message: JSON.parse(msg.Body) })
+          await handler({ message: body })
           await sqs.deleteMessage({
             QueueUrl: process.env.APP_SQS_URL,
             ReceiptHandle: msg.ReceiptHandle
@@ -116,9 +118,8 @@ if (process.env.AWS_EXECUTION_ENV) {
       runHttp(opts, handler)
     }
   }
-
   exports.publish = message => sqs.sendMessage({
-    MessageBody: JSON.stringify(message),
+    MessageBody: Buffer.from(JSON.stringify(message)).toString('base64'),
     QueueUrl: process.env.APP_SQS_URL
   })
 } else if (process.env.K_SERVICE) {
