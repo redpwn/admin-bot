@@ -58,7 +58,6 @@ server.run({}, async (req) => {
     challengeId,
     url
   }
-  console.log('publishing', JSON.stringify(payload))
   await server.publish(payload)
   return send('The admin will visit your URL.')
 })
