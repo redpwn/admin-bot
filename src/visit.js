@@ -8,10 +8,7 @@ const browser = puppeteer.launch({
   pipe: true,
   dumpio: true,
   executablePath: './chromium/chrome',
-  args: [
-    '--js-flags=--jitless',
-    ...(server.runtime === 'aws' ? ['--no-sandbox'] : [])
-  ]
+  args: server.runtime === 'aws' ? ['--no-sandbox'] : []
 })
 
 server.run({ subscribe: true }, async ({ message }) => {
