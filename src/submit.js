@@ -51,8 +51,9 @@ server.run({}, async (req) => {
     }
   }
   const url = body.get('url')
-  if (!/^https?:\/\//.test(url)) {
-    return send('The URL is invalid.')
+  const regex = challenge.urlRegex || /^https?:\/\//
+  if (!regex.test(url)) {
+    return send('The URL must match ' + regex.source)
   }
   const payload = {
     challengeId,

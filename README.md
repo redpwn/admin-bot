@@ -56,6 +56,7 @@ The value of each entry is an object with properties:
 * `name`: the display name of the challenge
 * `timeout`: the timeout in milliseconds for each admin bot visit
 * `handler`: a function which returns a `Promise` and accepts the submitted URL and a [Puppeteer `BrowserContext`](https://pptr.dev/#?show=api-class-browsercontext)
+* `urlRegex` (optional): a regex to check the URL against, by default this is `/^https?:\/\//`
 
 To mitigate possible Chrome vulnerabilities, V8 DCHECKs are enabled and JIT/WebAssembly/asm.js are disabled.
 
