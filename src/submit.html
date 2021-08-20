@@ -54,7 +54,7 @@
   <p>{{ msg }}</p>
   <label>
     URL
-    <input type="text" name="url" autofocus required placeholder="https://example.com" pattern="https?://.*" value="{{ url }}">
+    <input type="text" name="url" autofocus required placeholder="https://example.com" value="{{ url }}">
   </label>
   {{ #recaptcha_site }}
     <input type="hidden" name="recaptcha_code" id="recaptcha_code">
