@@ -22,6 +22,14 @@ const listen = (opts, handler) => {
       }
     }
     if (opts.subscribe) {
+      if (req.method !== 'POST') {
+        res.writeHead(405).end()
+        return
+      }
+      if (req.headers.origin !== undefined) {
+        res.writeHead(403).end()
+        return
+      }
       const data = JSON.parse(reqBody).message.data
       await handler({
         message: JSON.parse(Buffer.from(data, 'base64').toString())
