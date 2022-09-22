@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer-core')
+const puppeteer = require('puppeteer')
 const config = require('./config')
 const server = require('./server')
 
@@ -7,8 +7,7 @@ const sleep = time => new Promise(resolve => setTimeout(resolve, time))
 const browser = puppeteer.launch({
   pipe: true,
   dumpio: true,
-  executablePath: './chromium/chrome',
-  args: server.runtime === 'aws' ? ['--no-sandbox'] : []
+  args: server.runtime === 'aws' ? ['--no-sandbox'] : [],
 })
 
 server.run({ subscribe: true }, async ({ message }) => {

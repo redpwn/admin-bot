@@ -18,7 +18,7 @@ server.run({}, async (req) => {
       challenge_name: challenge.name,
       recaptcha_site: process.env.APP_RECAPTCHA_SITE,
       msg: req.query.msg,
-      url: req.query.url
+      url: req.query.url,
     })
     return {
       statusCode: 200,
@@ -57,7 +57,7 @@ server.run({}, async (req) => {
   }
   const payload = {
     challengeId,
-    url
+    url,
   }
   console.log('publishing', JSON.stringify(payload))
   await server.publish(payload)

@@ -3,22 +3,21 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "concurrently yarn:start:*",
+    "start": "concurrently npm:start:*",
     "start:submit": "PORT=8080 nodemon -L src/submit.js",
-    "start:visit": "PORT=8081 nodemon -L src/visit.js",
-    "postinstall": "[ -d chromium ] || curl -fsS https://static.redpwn.net/admin-bot/chromium-91.0.4472.148-2021-07-06.tar.bz2 | tar xj"
+    "start:visit": "PORT=8081 nodemon -L src/visit.js"
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.14.0",
-    "@google-cloud/pubsub": "^2.11.0",
-    "aws-lambda-ric": "^1.0.0",
+    "@google-cloud/pubsub": "^3.1.1",
+    "aws-lambda-ric": "^2.0.0",
     "got": "^11.8.2",
     "mustache": "^4.2.0",
-    "puppeteer-core": "^9.1.1",
+    "puppeteer": "^18.0.4",
     "raw-body": "^2.4.1"
   },
   "devDependencies": {
-    "concurrently": "^6.1.0",
+    "concurrently": "^7.4.0",
     "nodemon": "^2.0.7"
   }
 }

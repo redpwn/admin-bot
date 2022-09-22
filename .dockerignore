@@ -1,6 +1,1 @@
-*
-!package.json
-!yarn.lock
-!src
 src/config.js
-chromium
