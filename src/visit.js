@@ -4,10 +4,15 @@ const server = require('./server')
 
 const sleep = time => new Promise(resolve => setTimeout(resolve, time))
 
+const args = ['--js-flags=--jitless']
+if (server.runtime === 'aws') {
+  args.push('--no-sandbox')
+}
+
 const browser = puppeteer.launch({
   pipe: true,
   dumpio: true,
-  args: server.runtime === 'aws' ? ['--no-sandbox'] : [],
+  args,
 })
 
 server.run({ subscribe: true }, async ({ message }) => {

@@ -138,7 +138,7 @@ if (process.env.AWS_EXECUTION_ENV) {
   if (process.env.APP_PUBSUB_TOPIC) {
     const { PubSub } = require('@google-cloud/pubsub')
     const topic = new PubSub().topic(process.env.APP_PUBSUB_TOPIC)
-    exports.publish = message => topic.publishJSON(message)
+    exports.publish = message => topic.publishMessage({ json: message })
   }
 } else {
   exports.runtime = 'local'
