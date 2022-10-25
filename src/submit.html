@@ -69,12 +69,12 @@
         theme: 'dark',
         sitekey: '{{ . }}',
         callback: function (token) {
-          recaptcha_code.value = token
+          document.getElementById('recaptcha_code').value = token
           form.submit()
         }
       })
     })
-    form.addEventListener('submit', function (evt) {
+    document.getElementById('form').addEventListener('submit', function (evt) {
       evt.preventDefault()
       grecaptcha.execute()
     })

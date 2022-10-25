@@ -14,7 +14,7 @@ const listen = (opts, handler) => {
         reqBody = await getRawBody(req, {
           length: req.headers['content-length'],
           limit: '20kb',
-          encoding: 'utf8'
+          encoding: 'utf8',
         })
       } catch {
         res.writeHead(413).end()
@@ -32,7 +32,7 @@ const listen = (opts, handler) => {
       }
       const data = JSON.parse(reqBody).message.data
       await handler({
-        message: JSON.parse(Buffer.from(data, 'base64').toString())
+        message: JSON.parse(Buffer.from(data, 'base64').toString()),
       })
       res.writeHead(204).end()
     } else {
@@ -51,7 +51,7 @@ const listen = (opts, handler) => {
         query,
         method: req.method,
         headers: req.headers,
-        body: reqBody
+        body: reqBody,
       })
       res.writeHead(statusCode, headers).end(body)
     }
@@ -91,7 +91,7 @@ if (process.env.AWS_EXECUTION_ENV) {
           await handler({ message: body })
           await sqs.deleteMessage({
             QueueUrl: process.env.APP_SQS_URL,
-            ReceiptHandle: msg.ReceiptHandle
+            ReceiptHandle: msg.ReceiptHandle,
           })
         }
       })()
@@ -113,7 +113,7 @@ if (process.env.AWS_EXECUTION_ENV) {
         query,
         method: evt.httpMethod,
         headers: evt.headers,
-        body
+        body,
       })
     }
     ric.run('.', 'server._ricHandler')
@@ -128,7 +128,7 @@ if (process.env.AWS_EXECUTION_ENV) {
   }
   exports.publish = message => sqs.sendMessage({
     MessageBody: Buffer.from(JSON.stringify(message)).toString('base64'),
-    QueueUrl: process.env.APP_SQS_URL
+    QueueUrl: process.env.APP_SQS_URL,
   })
 } else if (process.env.K_SERVICE) {
   exports.runtime = 'gcp'
@@ -151,8 +151,8 @@ if (process.env.AWS_EXECUTION_ENV) {
     const req = http.request('http://localhost:8081', { method: 'POST' })
     req.end(JSON.stringify({
       message: {
-        data: Buffer.from(JSON.stringify(message)).toString('base64')
-      }
+        data: Buffer.from(JSON.stringify(message)).toString('base64'),
+      },
     }))
   }
 }

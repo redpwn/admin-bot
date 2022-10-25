@@ -24,7 +24,7 @@ server.run({ subscribe: true }, async ({ message }) => {
     ctx = await (await browser).createIncognitoBrowserContext()
     await Promise.race([
       challenge.handler(url, ctx),
-      sleep(challenge.timeout)
+      sleep(challenge.timeout),
     ])
   } catch (e) {
     console.error(e)

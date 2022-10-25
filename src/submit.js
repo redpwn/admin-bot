@@ -23,7 +23,7 @@ server.run({}, async (req) => {
     return {
       statusCode: 200,
       headers: { 'content-type': 'text/html' },
-      body: page
+      body: page,
     }
   }
   if (req.method !== 'POST') {
@@ -33,8 +33,8 @@ server.run({}, async (req) => {
   const send = msg => ({
     statusCode: 302,
     headers: {
-      location: `?url=${encodeURIComponent(body.get('url'))}&msg=${encodeURIComponent(msg)}`
-    }
+      location: `?url=${encodeURIComponent(body.get('url'))}&msg=${encodeURIComponent(msg)}`,
+    },
   })
   if (process.env.APP_RECAPTCHA_SITE) {
     const recaptchaRes = await got({
@@ -43,23 +43,18 @@ server.run({}, async (req) => {
       responseType: 'json',
       form: {
         secret: process.env.APP_RECAPTCHA_SECRET,
-        response: body.get('recaptcha_code')
-      }
+        response: body.get('recaptcha_code'),
+      },
     })
     if (!recaptchaRes.body.success) {
       return send('The reCAPTCHA is invalid.')
     }
   }
   const url = body.get('url')
-  const regex = challenge.urlRegex || /^https?:\/\//
+  const regex = challenge.urlRegex ?? /^https?:\/\//
   if (!regex.test(url)) {
-    return send('The URL must match ' + regex.source)
+    return send(`The URL must match ${regex.source}`)
   }
-  const payload = {
-    challengeId,
-    url,
-  }
-  console.log('publishing', JSON.stringify(payload))
-  await server.publish(payload)
+  await server.publish({ challengeId, url })
   return send('The admin will visit your URL.')
 })
